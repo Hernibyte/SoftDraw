@@ -63,6 +63,33 @@ namespace SOFTDRAW
         }
     }
 
+    void render_window::put_line(std::pair<i32, i32> start, std::pair<i32, i32> end, u32 color) {
+        int dx = abs(end.first - start.first);
+        int dy = abs(end.second - start.second);
+
+        int sx = (start.first < end.first) ? 1 : -1;   // dirección en X
+        int sy = (start.second < end.second) ? 1 : -1;   // dirección en Y
+
+        int err = dx - dy;             // error acumulado
+
+        while (true) {
+            put_pixel(start.first, start.second, color);          // dibujar el pixel actual
+
+            if (start.first == end.first && start.second == end.second) break;
+
+            int e2 = 2 * err;
+
+            if (e2 > -dy) {
+                err -= dy;
+                start.first += sx;
+            }
+            if (e2 < dx) {
+                err += dx;
+                start.second += sy;
+            }
+        }
+    }
+    
     u32 render_window::get_counter()
     {
         return SDL_GetPerformanceCounter();

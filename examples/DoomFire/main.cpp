@@ -21,7 +21,7 @@ static const u32 fire_palette[FIRE_PALETTE_SIZE] =
 
 int main()
 {
-    SOFTDRAW::render_window _window {"DrawPixel Example", WIDTH, HEIGHT};
+    SOFTDRAW::render_window _window {"DoomFire Example", WIDTH, HEIGHT};
 
     const double target_frame = 1.0 / 60.0;
     u32 frame = 0;

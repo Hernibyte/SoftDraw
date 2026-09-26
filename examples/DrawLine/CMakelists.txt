@@ -1,0 +1,11 @@
+add_executable(Example_DrawLine)
+
+target_sources(Example_DrawLine
+    PRIVATE
+        main.cpp
+)
+
+target_link_libraries(Example_DrawLine
+    PRIVATE
+        SoftDraw
+)

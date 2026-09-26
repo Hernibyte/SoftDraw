@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <utility>
 
 #include "platform/default_types.h"
 
@@ -20,6 +21,8 @@ namespace SOFTDRAW
         void put_pixel(u32 x, u32 y, u32 color);
         void clear(u32 color);
 
+        void put_line(std::pair<i32, i32> start, std::pair<i32, i32> end, u32 color);
+        
         u32 get_counter();
         u32 get_frequency();
 
