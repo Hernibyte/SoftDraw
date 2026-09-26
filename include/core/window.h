@@ -22,6 +22,7 @@ namespace SOFTDRAW
         void clear(u32 color);
 
         void put_line(std::pair<i32, i32> start, std::pair<i32, i32> end, u32 color);
+        void put_triangle(std::pair<i32, i32> first_vertex_position, std::pair<i32, i32> second_vertex_position, std::pair<i32, i32> third_vertex_position);
         
         u32 get_counter();
         u32 get_frequency();

@@ -90,6 +90,13 @@ namespace SOFTDRAW
         }
     }
     
+    void render_window::put_triangle(std::pair<i32, i32> first_vertex_position, std::pair<i32, i32> second_vertex_position, std::pair<i32, i32> third_vertex_position)
+    {
+        put_line(first_vertex_position, second_vertex_position, 0xFF0000);
+        put_line(second_vertex_position, third_vertex_position, 0xFF0000);
+        put_line(third_vertex_position, first_vertex_position, 0xFF0000);
+    }
+
     u32 render_window::get_counter()
     {
         return SDL_GetPerformanceCounter();
