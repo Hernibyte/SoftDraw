@@ -1,0 +1,51 @@
+{
+    "version": 6,
+
+    "configurePresets": [
+        {
+            "name": "clang-debug",
+            "displayName": "Clang Debug",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/clang-debug",
+
+            "cacheVariables": {
+                "CMAKE_C_COMPILER": "clang",
+                "CMAKE_CXX_COMPILER": "clang++",
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        },
+
+        {
+            "name": "clang-release",
+            "displayName": "Clang Release",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/clang-release",
+
+            "cacheVariables": {
+                "CMAKE_C_COMPILER": "clang",
+                "CMAKE_CXX_COMPILER": "clang++",
+                "CMAKE_BUILD_TYPE": "Release"
+            }
+        },
+
+        {
+            "name": "vs2026-debug",
+            "displayName": "VS2026 Debug",
+            "generator": "Visual Studio 18 2026",
+            "binaryDir": "${sourceDir}/build/vs2026-debug",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        },
+
+        {
+            "name": "vs2026-release",
+            "inherits": "vs2026-debug",
+            "displayName": "Visual Studio 2026 Release",
+            "binaryDir": "${sourceDir}/build/vs2026-release",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release"
+            }
+        }   
+    ]
+}

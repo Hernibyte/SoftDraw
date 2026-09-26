@@ -1,0 +1,11 @@
+add_executable(Example_DoomFire)
+
+target_sources(Example_DoomFire
+    PRIVATE
+        main.cpp
+)
+
+target_link_libraries(Example_DoomFire
+    PRIVATE
+        SoftDraw
+)

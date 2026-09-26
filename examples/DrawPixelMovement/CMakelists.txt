@@ -1,0 +1,11 @@
+add_executable(Example_DrawPixelMovement)
+
+target_sources(Example_DrawPixelMovement
+    PRIVATE
+        main.cpp
+)
+
+target_link_libraries(Example_DrawPixelMovement
+    PRIVATE
+        SoftDraw
+)

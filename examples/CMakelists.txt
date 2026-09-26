@@ -1,0 +1,3 @@
+add_subdirectory(DrawPixel)
+add_subdirectory(DrawPixelMovement)
+add_subdirectory(DoomFire)
