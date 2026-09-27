@@ -35,6 +35,7 @@ target_sources(SoftDraw
             include/SoftDraw.h
             include/core/window.h
             include/platform/default_types.h
+            include/data_structures/vec.h
     PRIVATE
         src/core/window.cpp
 )

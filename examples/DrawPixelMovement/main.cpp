@@ -14,10 +14,10 @@ int main()
     {
         u64 start = _window.get_counter();
 
-        _window.clear(0x000000);
+        _window.clear(0x000000FF);
         int x = frame % WIDTH;
         int y = HEIGHT/2;
-        _window.put_pixel(x, y, 0x00FF00);
+        _window.put_pixel(x, y, 0x00FF00FF);
         
         _window.display();
 

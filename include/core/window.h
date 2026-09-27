@@ -3,6 +3,7 @@
 #include <vector>
 #include <utility>
 
+#include "data_structures/vec.h"
 #include "platform/default_types.h"
 
 struct SDL_Window;
@@ -15,22 +16,31 @@ namespace SOFTDRAW
     class render_window
     {
     public:
+        // Estructura auxiliar
+        struct Edge {
+            float x;        // posición x actual
+            float invSlope; // 1/m
+        };
+
         render_window(c_cstr title, u32 width, u32 height);
         ~render_window();
 
-        void put_pixel(u32 x, u32 y, u32 color);
-        void clear(u32 color);
+        void put_pixel(const u32 x, const u32 y, const u32 color);
+        void put_pixel(const vec_2d<u32> vec2d, const u32 color);
+        void clear(const u32 color);
 
-        void put_line(std::pair<i32, i32> start, std::pair<i32, i32> end, u32 color);
-        void put_triangle(std::pair<i32, i32> first_vertex_position, std::pair<i32, i32> second_vertex_position, std::pair<i32, i32> third_vertex_position);
-        
-        u32 get_counter();
-        u32 get_frequency();
+        void put_line(vec_2d<f32> start, vec_2d<f32> end, u32 color);
 
-        void delay(double ms_delay);
+        void put_outline_triangle(const vec_2d<f32> first_vertex_position, const vec_2d<f32> second_vertex_position, const vec_2d<f32> third_vertex_position, u32 color);
+        void put_filled_triangle(const vec_2d<f32> first_vertex_position, const vec_2d<f32> second_vertex_position, const vec_2d<f32> third_vertex_position, u32 color);
+
+        u64 get_counter();
+        u64 get_frequency();
+
+        void delay(u32 ms_delay);
 
         bool should_close() const;
-        void display();
+        void display() const;
 
     private:
         struct window_props
