@@ -16,12 +16,6 @@ namespace SOFTDRAW
     class render_window
     {
     public:
-        // Estructura auxiliar
-        struct Edge {
-            float x;        // posición x actual
-            float invSlope; // 1/m
-        };
-
         render_window(c_cstr title, u32 width, u32 height);
         ~render_window();
 
