@@ -1,4 +1,4 @@
-#include "core/window.h"
+#include "core/render_window.h"
 
 #include <algorithm>
 #include <cmath>

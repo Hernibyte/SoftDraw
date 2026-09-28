@@ -33,11 +33,11 @@ target_sources(SoftDraw
         BASE_DIRS ./include
         FILES
             include/SoftDraw.h
-            include/core/window.h
+            include/core/render_window.h
             include/platform/default_types.h
             include/data_structures/vec.h
     PRIVATE
-        src/core/window.cpp
+        src/core/render_window.cpp
 )
 
 target_link_libraries(SoftDraw
