@@ -4,6 +4,7 @@
 #include <utility>
 
 #include "data_structures/vec.h"
+#include "data_structures/color.h"
 #include "platform/default_types.h"
 
 struct SDL_Window;
@@ -19,14 +20,15 @@ namespace SOFTDRAW
         render_window(c_cstr title, u32 width, u32 height);
         ~render_window();
 
-        void put_pixel(const u32 x, const u32 y, const u32 color);
-        void put_pixel(const vec_2d<u32> vec2d, const u32 color);
-        void clear(const u32 color);
+        void put_raw_pixel(const u32 x, const u32 y, const u32 hex_color);
+        void put_pixel(const u32 x, const u32 y, const u32_color color);
+        void put_pixel(const vec_2d<u32> vec2d, const u32_color color);
+        void clear(const u32_color color);
 
-        void put_line(vec_2d<f32> start, vec_2d<f32> end, u32 color);
+        void put_line(vec_2d<f32> start, vec_2d<f32> end, u32_color color);
 
-        void put_outline_triangle(const vec_2d<f32> first_vertex_position, const vec_2d<f32> second_vertex_position, const vec_2d<f32> third_vertex_position, u32 color);
-        void put_filled_triangle(const vec_2d<f32> first_vertex_position, const vec_2d<f32> second_vertex_position, const vec_2d<f32> third_vertex_position, u32 color);
+        void put_outline_triangle(const vec_2d<f32> first_vertex_position, const vec_2d<f32> second_vertex_position, const vec_2d<f32> third_vertex_position, u32_color color);
+        void put_filled_triangle(const vec_2d<f32> first_vertex_position, const vec_2d<f32> second_vertex_position, const vec_2d<f32> third_vertex_position, u32_color color);
 
         u64 get_counter();
         u64 get_frequency();

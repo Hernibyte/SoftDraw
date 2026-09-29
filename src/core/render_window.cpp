@@ -34,7 +34,7 @@ namespace SOFTDRAW
 
         m_window_props.m_frame_texture = SDL_CreateTexture(
             m_window_props.m_renderer, 
-            SDL_PIXELFORMAT_RGBA8888,
+            SDL_PIXELFORMAT_RGBA32,
             SDL_TEXTUREACCESS_STREAMING, 
             m_window_props.m_width, 
             m_window_props.m_height
@@ -53,27 +53,37 @@ namespace SOFTDRAW
         SDL_Quit();
     }
 
-    void render_window::put_pixel(const u32 x, const u32 y, const u32 color)
+    void render_window::put_raw_pixel(const u32 x, const u32 y, const u32 hex_color)
+    {
+        u8 a = (u8)(hex_color & 0xFF);
+        u8 b = (u8)((hex_color >> 8) & 0xFF);
+        u8 g = (u8)((hex_color >> 16) & 0xFF);
+        u8 r = (u8)((hex_color >> 24) & 0xFF);
+
+        put_pixel(x, y, {r, g, b, a});
+    }
+
+    void render_window::put_pixel(const u32 x, const u32 y, const u32_color color)
     {
         if (x < 0 || x >= m_window_props.m_width) return;
         if (y < 0 || y >= m_window_props.m_height) return;
-        m_window_props.m_framebuffer[m_window_props.m_width * y + x] = color;
+        m_window_props.m_framebuffer[m_window_props.m_width * y + x] = SDL_MapRGBA(SDL_GetPixelFormatDetails(m_window_props.m_frame_texture->format), nullptr, color.r, color.g, color.b, color.a);
     }
 
-    void render_window::put_pixel(const vec_2d<u32> vec2d, const u32 color)
+    void render_window::put_pixel(const vec_2d<u32> vec2d, const u32_color color)
     {
         put_pixel(vec2d.get_x(), vec2d.get_y(), color);
     }
 
-    void render_window::clear(const u32 color)
+    void render_window::clear(const u32_color color)
     {
         for (u32& pixel : m_window_props.m_framebuffer)
         {
-            pixel = color;
+            pixel = SDL_MapRGBA(SDL_GetPixelFormatDetails(m_window_props.m_frame_texture->format), nullptr, color.r, color.g, color.b, color.a);
         }
     }
 
-    void render_window::put_line(vec_2d<f32> start, vec_2d<f32> end, u32 color) {
+    void render_window::put_line(vec_2d<f32> start, vec_2d<f32> end, u32_color color) {
         const int dx = abs((i32)end.get_x() - (i32)start.get_x());
         const int dy = abs((i32)end.get_y() - (i32)start.get_y());
 
@@ -100,14 +110,14 @@ namespace SOFTDRAW
         }
     }
     
-    void render_window::put_outline_triangle(const vec_2d<f32> first_vertex_position, const vec_2d<f32> second_vertex_position, const vec_2d<f32> third_vertex_position, u32 color)
+    void render_window::put_outline_triangle(const vec_2d<f32> first_vertex_position, const vec_2d<f32> second_vertex_position, const vec_2d<f32> third_vertex_position, u32_color color)
     {
         put_line(first_vertex_position, second_vertex_position, color);
         put_line(second_vertex_position, third_vertex_position, color);
         put_line(third_vertex_position, first_vertex_position, color);
     }
     
-    void render_window::put_filled_triangle(const vec_2d<f32> first_vertex_position, const vec_2d<f32> second_vertex_position, const vec_2d<f32> third_vertex_position, u32 color)
+    void render_window::put_filled_triangle(const vec_2d<f32> first_vertex_position, const vec_2d<f32> second_vertex_position, const vec_2d<f32> third_vertex_position, u32_color color)
     {
         f32 x0 = first_vertex_position.get_x();
         f32 y0 = first_vertex_position.get_y();

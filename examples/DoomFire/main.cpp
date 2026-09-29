@@ -40,7 +40,7 @@ int main()
     {
         u64 start = _window.get_counter();
 
-        _window.clear(0x000000FF);
+        _window.clear({0, 0, 0, 255});
 
         for (u32 x = 0; x < FIRE_W; x++)
         {
@@ -69,7 +69,7 @@ int main()
             for (u32 x = 0; x < FIRE_W; x++)
             {
                 uint8_t idx = fire_pixels[y * FIRE_W + x];
-                _window.put_pixel(x, y, fire_palette[idx]);
+                _window.put_raw_pixel(x, y, fire_palette[idx]);
             }
         }
         

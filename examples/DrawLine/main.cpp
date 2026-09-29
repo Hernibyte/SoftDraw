@@ -9,9 +9,9 @@ int main()
     
     while(!_window.should_close())
     {
-        _window.clear(0x000000FF);
+        _window.clear({0, 0, 0, 255});
 
-        _window.put_line({ 300, 50 }, {WIDTH/2, HEIGHT/2 }, 0xFF0000FF);
+        _window.put_line({ 300, 50 }, {WIDTH/2, HEIGHT/2 }, {255, 0, 0, 255});
         
         _window.display();
     }

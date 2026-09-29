@@ -9,9 +9,9 @@ int main()
     
     while(!_window.should_close())
     {
-        _window.clear(0x000000FF);
+        _window.clear({0, 0, 0, 255});
 
-        _window.put_pixel({ WIDTH/2, HEIGHT/2 }, 0x00FF00FF);
+        _window.put_pixel(WIDTH/2, HEIGHT/2, {0, 255, 0, 255} );
         
         _window.display();
     }
