@@ -53,26 +53,26 @@ namespace SOFTDRAW
         SDL_Quit();
     }
 
-    void render_window::put_raw_pixel(const u32 x, const u32 y, const u32 hex_color)
+    void render_window::put_raw_pixel(const u32 x, const u32 y, const u32 rgba8888_color)
     {
-        u8 a = (u8)(hex_color & 0xFF);
-        u8 b = (u8)((hex_color >> 8) & 0xFF);
-        u8 g = (u8)((hex_color >> 16) & 0xFF);
-        u8 r = (u8)((hex_color >> 24) & 0xFF);
+        u8 a = (u8)(rgba8888_color & 0xFF);
+        u8 b = (u8)((rgba8888_color >> 8) & 0xFF);
+        u8 g = (u8)((rgba8888_color >> 16) & 0xFF);
+        u8 r = (u8)((rgba8888_color >> 24) & 0xFF);
 
-        put_pixel(x, y, {r, g, b, a});
+        put_raw_pixel(x, y, {r, g, b, a});
     }
 
-    void render_window::put_pixel(const u32 x, const u32 y, const u32_color color)
+    void render_window::put_raw_pixel(const u32 x, const u32 y, const u32_color color)
     {
         if (x < 0 || x >= m_window_props.m_width) return;
         if (y < 0 || y >= m_window_props.m_height) return;
         m_window_props.m_framebuffer[m_window_props.m_width * y + x] = SDL_MapRGBA(SDL_GetPixelFormatDetails(m_window_props.m_frame_texture->format), nullptr, color.r, color.g, color.b, color.a);
     }
 
-    void render_window::put_pixel(const vec_2d<u32> vec2d, const u32_color color)
+    void render_window::put_raw_pixel(const vec_2d<u32> vec2d, const u32_color color)
     {
-        put_pixel(vec2d.get_x(), vec2d.get_y(), color);
+        put_raw_pixel(vec2d.get_x(), vec2d.get_y(), color);
     }
 
     void render_window::clear(const u32_color color)
@@ -83,41 +83,89 @@ namespace SOFTDRAW
         }
     }
 
-    void render_window::put_line(vec_2d<f32> start, vec_2d<f32> end, u32_color color) {
-        const int dx = abs((i32)end.get_x() - (i32)start.get_x());
-        const int dy = abs((i32)end.get_y() - (i32)start.get_y());
+    void render_window::put_pixel(const vec_2d<u32> vec2d, const u32_color color)
+    {
+        f32 l_x = (vec2d.get_x() + 1) / 2 * m_window_props.m_width;
+        f32 l_y = (1 - (vec2d.get_y() + 1) / 2) * m_window_props.m_height;
 
-        const int sx = (start.get_x() < end.get_x()) ? 1 : -1;   // dirección en X
-        const int sy = (start.get_y() < end.get_y()) ? 1 : -1;   // dirección en Y
+        put_raw_pixel(l_x, l_y, color);
+    }
 
-        int err = dx - dy;             // error acumulado
+    void render_window::put_raw_line(vec_2d<f32> start, vec_2d<f32> end, const u32_color start_color, const u32_color end_color) {
+        put_raw_line({start, end}, {start_color, end_color});
+    }
 
-        while (true) {
-            put_pixel((i32)start.get_x(), (i32)start.get_y(), color);          // dibujar el pixel actual
+    void render_window::put_raw_line(const vec_2d<vec_2d<f32>> points, const vec_2d<u32_color> colors)
+    {
+        f32 x0 = points.get_x().get_x();
+        f32 x1 = points.get_y().get_x();
 
-            if (start.get_x() == end.get_x() && start.get_y() == end.get_y()) break;
+        f32 y0 = points.get_x().get_y();
+        f32 y1 = points.get_y().get_y();
+
+        u32_color c0 = colors.get_x();
+        u32_color c1 = colors.get_y();
+
+        int dx = std::abs(x1 - x0);
+        int dy = std::abs(y1 - y0);
+
+        int sx = (x0 < x1) ? 1 : -1;
+        int sy = (y0 < y1) ? 1 : -1;
+
+        int err = dx - dy;
+
+        int totalSteps = std::max(dx, dy);
+        if (totalSteps == 0) 
+        {
+            put_raw_pixel(x0, y0, c0);
+            return;
+        }
+
+        int step = 0;
+
+        while (true) 
+        {
+            float t = static_cast<float>(step) / totalSteps;
+            u32_color color = u32_color::lerp(c0, c1, t);
+
+            put_raw_pixel(x0, y0, color);
+
+            if (x0 == x1 && y0 == y1) break;
 
             int e2 = 2 * err;
 
             if (e2 > -dy) {
                 err -= dy;
-                start.set_x(start.get_x() + (f32)sx);
+                x0 += sx;
             }
             if (e2 < dx) {
                 err += dx;
-                start.set_y(start.get_y() + (f32)sy);
+                y0 += sy;
             }
+
+            step++;
         }
     }
-    
-    void render_window::put_outline_triangle(const vec_2d<f32> first_vertex_position, const vec_2d<f32> second_vertex_position, const vec_2d<f32> third_vertex_position, u32_color color)
+
+    void render_window::put_line(const vec_2d<vec_2d<f32>> points, const vec_2d<u32_color> colors)
     {
-        put_line(first_vertex_position, second_vertex_position, color);
-        put_line(second_vertex_position, third_vertex_position, color);
-        put_line(third_vertex_position, first_vertex_position, color);
+        f32 l_x0 = (points.get_x().get_x() + 1) / 2 * m_window_props.m_width;
+        f32 l_y0 = (1 - (points.get_x().get_y() + 1) / 2) * m_window_props.m_height;
+
+        f32 l_x1 = (points.get_y().get_x() + 1) / 2 * m_window_props.m_width;
+        f32 l_y1 = (1 - (points.get_y().get_y() + 1) / 2) * m_window_props.m_height;
+
+        put_raw_line({ {l_x0, l_y0} , {l_x1, l_y1} } , colors);
     }
     
-    void render_window::put_filled_triangle(const vec_2d<f32> first_vertex_position, const vec_2d<f32> second_vertex_position, const vec_2d<f32> third_vertex_position, u32_color color)
+    void render_window::put_raw_outline_triangle(const vec_2d<f32> first_vertex_position, const vec_2d<f32> second_vertex_position, const vec_2d<f32> third_vertex_position, u32_color color)
+    {
+        put_raw_line(first_vertex_position, second_vertex_position, color, color);
+        put_raw_line(second_vertex_position, third_vertex_position, color, color);
+        put_raw_line(third_vertex_position, first_vertex_position, color, color);
+    }
+    
+    void render_window::put_raw_filled_triangle(const vec_2d<f32> first_vertex_position, const vec_2d<f32> second_vertex_position, const vec_2d<f32> third_vertex_position, u32_color color)
     {
         f32 x0 = first_vertex_position.get_x();
         f32 y0 = first_vertex_position.get_y();
@@ -138,7 +186,7 @@ namespace SOFTDRAW
             const int end   = static_cast<int>(std::floor(x_right));
             for (int x = start; x <= end; ++x)
             {
-                put_pixel(x, y, color);
+                put_raw_pixel(x, y, color);
             }
         };
 
@@ -174,9 +222,9 @@ namespace SOFTDRAW
             }
         }
 
-        put_line({x0, y0},{x1, y1}, color);
-        put_line({x1, y1},{x2, y2}, color);
-        put_line({x2, y2},{x0, y0}, color);
+        put_raw_line({x0, y0},{x1, y1}, color, color);
+        put_raw_line({x1, y1},{x2, y2}, color, color);
+        put_raw_line({x2, y2},{x0, y0}, color, color);
     }
 
     u64 render_window::get_counter()

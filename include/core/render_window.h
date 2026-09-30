@@ -19,16 +19,25 @@ namespace SOFTDRAW
     public:
         render_window(c_cstr title, u32 width, u32 height);
         ~render_window();
-
-        void put_raw_pixel(const u32 x, const u32 y, const u32 hex_color);
-        void put_pixel(const u32 x, const u32 y, const u32_color color);
-        void put_pixel(const vec_2d<u32> vec2d, const u32_color color);
+        
         void clear(const u32_color color);
 
-        void put_line(vec_2d<f32> start, vec_2d<f32> end, u32_color color);
 
-        void put_outline_triangle(const vec_2d<f32> first_vertex_position, const vec_2d<f32> second_vertex_position, const vec_2d<f32> third_vertex_position, u32_color color);
-        void put_filled_triangle(const vec_2d<f32> first_vertex_position, const vec_2d<f32> second_vertex_position, const vec_2d<f32> third_vertex_position, u32_color color);
+        void put_raw_pixel(const u32 x, const u32 y, const u32 rgba8888_color);
+        void put_raw_pixel(const u32 x, const u32 y, const u32_color color);
+        void put_raw_pixel(const vec_2d<u32> vec2d, const u32_color color);
+
+        void put_raw_line(vec_2d<f32> start, vec_2d<f32> end, const u32_color start_color, const u32_color end_color);
+        void put_raw_line(const vec_2d<vec_2d<f32>> points, const vec_2d<u32_color> colors);
+        
+        void put_raw_outline_triangle(const vec_2d<f32> first_vertex_position, const vec_2d<f32> second_vertex_position, const vec_2d<f32> third_vertex_position, u32_color color);
+        void put_raw_filled_triangle(const vec_2d<f32> first_vertex_position, const vec_2d<f32> second_vertex_position, const vec_2d<f32> third_vertex_position, u32_color color);
+        
+
+        void put_pixel(const vec_2d<u32> vec2d, const u32_color color);
+        
+        void put_line(const vec_2d<vec_2d<f32>> points, const vec_2d<u32_color> colors);
+
 
         u64 get_counter();
         u64 get_frequency();

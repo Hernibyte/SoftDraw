@@ -11,7 +11,9 @@ int main()
     {
         _window.clear({0, 0, 0, 255});
 
-        _window.put_line({ 300, 50 }, {WIDTH/2, HEIGHT/2 }, {255, 0, 0, 255});
+        _window.put_raw_line({ 300, 50 }, { WIDTH/2, HEIGHT/2 }, {255, 0, 0, 255}, {0, 0, 255, 255});
+        //_window.put_raw_line({{ 300, 50 }, { WIDTH/2, HEIGHT/2 }}, {{255, 0, 0, 255}, {0, 255, 0, 255}});
+        _window.put_line({ {-0.5f, -0.5f}, {0.5f, 0.5f} }, { {255, 0, 0, 255}, {0, 0, 255, 255} });
         
         _window.display();
     }

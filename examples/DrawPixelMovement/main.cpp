@@ -17,7 +17,7 @@ int main()
         _window.clear({0, 0, 0, 255});
         int x = frame % WIDTH;
         int y = HEIGHT/2;
-        _window.put_pixel(x, y, {0, 255, 0, 255});
+        _window.put_raw_pixel(x, y, {0, 255, 0, 255});
         
         _window.display();
 
